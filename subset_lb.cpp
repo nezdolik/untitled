@@ -3,7 +3,7 @@
 
 
 SubsetLoadBalancer::SubsetLoadBalancer() :
-        subset_keys_({{"version", "env"},
+        subset_keys_top_({{"version", "env"},
                       {"app",     "version"},
                       {"x"}}) {
     initSubsetSelectorMap();
@@ -13,15 +13,15 @@ SubsetLoadBalancer::~SubsetLoadBalancer() {};
 
 
 void SubsetLoadBalancer::initSubsetSelectorMap() {
-    SubsetSelectorMap *selectors = &selectors_;
-    const auto subset_keys(subset_keys_);
-    for (const auto &selector_keys : subset_keys) {
-        for (auto &key : selector_keys) {
-            const auto &selector_it = selectors->subset_keys.find(key);
+    SubsetSelectorMap* selectors = &selectors_;
+    for (const auto& selector_keys : subset_keys_top_) {
+        for (const auto& key : selector_keys) {
+            const auto& selector_it = selectors->subset_keys.find(key);
             if (selector_it == selectors->subset_keys.end()) {
                 auto* next = new SubsetSelectorMap();
                 selectors->subset_keys.emplace(std::pair<std::string, SubsetSelectorMap>(key, *next));
                 selectors = next;
+                next = nullptr;
             } else {
                 selectors = &selector_it->second;
             };
@@ -31,7 +31,7 @@ void SubsetLoadBalancer::initSubsetSelectorMap() {
 }
 
 void SubsetLoadBalancer::printSubsetKeys() {
-    for (auto i = subset_keys_.begin(); i != subset_keys_.end(); ++i) {
+    for (auto i = subset_keys_top_.begin(); i != subset_keys_top_.end(); ++i) {
         for (const auto key : *i) {
             std::cout << key << ' ';
         }

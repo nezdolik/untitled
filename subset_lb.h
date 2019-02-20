@@ -12,7 +12,7 @@ struct SubsetSelectorMap {
 class SubsetLoadBalancer {
 private:
     SubsetSelectorMap selectors_;
-    const std::vector<std::set<std::string> > subset_keys_;
+    const std::vector<std::set<std::string> > subset_keys_top_;
     void doPrint(const SubsetSelectorMap map,const std::string* key);
 public:
     SubsetLoadBalancer();
