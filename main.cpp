@@ -13,7 +13,7 @@ int main() {
     SubsetLoadBalancer* x = new SubsetLoadBalancer();
     std::cout << "Hello, World!" << std::endl;
     x->printSelectors();
-    x->printSubsetKeys();
+    //x->printSubsetKeys();
     delete x;
     return 0;
 }
