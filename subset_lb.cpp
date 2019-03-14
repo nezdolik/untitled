@@ -42,6 +42,26 @@ void SubsetLoadBalancer::initSubsetSelectorMap() {
     }
 }
 
+std::optional<Fallback> SubsetLoadBalancer::tryFindSelectorFallbackPolicy(const std::vector<std::string>& match_criteria_vec) {
+    const SubsetSelectorMap* selectors = &selectors_;
+    for (uint32_t i = 0; i < match_criteria_vec.size(); i++) {
+        const std::string& match_criterion = match_criteria_vec[i];
+        const auto& subset_it = selectors->subset_keys.find(match_criterion);
+        if (subset_it == selectors->subset_keys.end()) {
+            // No subsets with this key (at this level in the hierarchy).
+            break;
+        }
+
+        if (i + 1 == match_criteria_vec.size()) {
+            // We've reached the end of the criteria, and they all matched.
+            return selectors->fallback;
+        }
+
+        selectors = &subset_it->second;
+    }
+    return std::nullopt;
+}
+
 void SubsetLoadBalancer::printSubsetKeys() {
 //    for (auto i = subset_keys_top_.begin(); i != subset_keys_top_.end(); ++i) {
 //        for (const auto key : *i) {
