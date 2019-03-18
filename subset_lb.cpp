@@ -6,7 +6,7 @@ SubsetLoadBalancer::SubsetLoadBalancer() :
         subset_keys_top_({
                                  std::pair<std::set<std::string>, std::optional<Fallback>>({"version", "env"},
                                                                                            std::optional<Fallback>(
-                                                                                                   Fallback::Default)),
+                                                                                                   Fallback::None)),
                                  std::pair<std::set<std::string>, std::optional<Fallback>>({"app", "version"},
                                                                                            std::nullopt),
                                  std::pair<std::set<std::string>, std::optional<Fallback>>({"x"},
@@ -29,9 +29,10 @@ void SubsetLoadBalancer::initSubsetSelectorMap() {
         int pos = 0;
         for (const auto &key : selector_keys) {
             const auto &selector_it = selectors->subset_keys.find(key);
+            pos++;
             if (selector_it == selectors->subset_keys.end()) {
                 //if this is last key for given selector, check if it has fallback specified
-                if (++pos == selector_keys.size() && selector_with_fallback.second) {
+                if (pos == selector_keys.size() && selector_with_fallback.second) {
                     selectors->fallback = selector_with_fallback.second;
                 }
                 selectors->subset_keys.emplace(std::make_pair(key, SubsetSelectorMap()));
@@ -46,7 +47,7 @@ void SubsetLoadBalancer::initSubsetSelectorMap() {
 }
 
 std::optional<Fallback>
-SubsetLoadBalancer::tryFindSelectorFallbackPolicy(const std::vector<std::string> &match_criteria_vec) const {
+SubsetLoadBalancer::tryFindSelectorFallbackPolicy(const std::vector<std::string>& match_criteria_vec) const {
     const SubsetSelectorMap *selectors = &selectors_;
     for (uint32_t i = 0; i < match_criteria_vec.size(); i++) {
         const std::string &match_criterion = match_criteria_vec[i];
@@ -102,6 +103,7 @@ void SubsetLoadBalancer::printFallback(const std::optional<Fallback> &fallback) 
                                        fallback == Fallback::Default ? "Default>"
                                                                      : "None>");
     } else {
+
         std::cout << "nullopt";
     }
 }

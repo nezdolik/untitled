@@ -1,6 +1,5 @@
 #include <iostream>
 #include "subset_lb.h"
-//#include "foo.h"
 #include <unordered_map>
 #include <set>
 #include <vector>
@@ -11,13 +10,32 @@ using namespace std;
 
 int main() {
     SubsetLoadBalancer* x = new SubsetLoadBalancer();
-    std::cout << "Hello, World!" << std::endl;
     x->printSelectors();
-    const std::vector<std::string> match_criteria_vec = {"x","z"};
-    const auto fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec);
+    std::vector<std::string> match_criteria_vec{"x", "z"};
+
+    auto fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec);
     x->printFallback(fallback);
 
-    //x->printSubsetKeys();
+    std::vector<std::string> match_criteria_vec1{"x"};
+
+    fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec1);
+    x->printFallback(fallback);
+
+    std::vector<std::string> match_criteria_vec2{"pp"};
+
+    fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec2);
+    x->printFallback(fallback);
+
+    std::vector<std::string> match_criteria_vec3{"env","version"};
+
+    fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec3);
+    x->printFallback(fallback);
+
+    std::vector<std::string> match_criteria_vec4{"app","version"};
+
+    fallback = x->tryFindSelectorFallbackPolicy(match_criteria_vec4);
+    x->printFallback(fallback);
+
     delete x;
     return 0;
 }

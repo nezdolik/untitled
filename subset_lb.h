@@ -10,6 +10,7 @@
 
 
 enum class Fallback {
+    NotDefined,
     None,
     Any,
     Default
@@ -39,6 +40,6 @@ public:
     void printSubsetKeys();
     void printSelectors();
     void printFallback(const std::optional<Fallback> &fallback);
-    std::optional<Fallback> tryFindSelectorFallbackPolicy(const std::vector<std::string> &) const;
+    std::optional<Fallback> tryFindSelectorFallbackPolicy(const std::vector<std::string>&match_criteria_vec) const;
 };
 
