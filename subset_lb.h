@@ -5,7 +5,7 @@
 #include <set>
 #include <vector>
 #include <string>
-#include  <optional>
+#include  <experimental/optional>
 
 
 
@@ -16,19 +16,22 @@ enum class Fallback {
     Default
 };
 
+struct SubsetSelectorMap;
+typedef std::shared_ptr<SubsetSelectorMap> SubsetSelectorMapPtr;
+
 struct SubsetSelectorMap {
-    std::unordered_map<std::string, SubsetSelectorMap> subset_keys;
-    std::optional<Fallback> fallback;
+    std::unordered_map<std::string, SubsetSelectorMapPtr> subset_keys;
+    std::experimental::optional<Fallback> fallback;
 };
 
 class SubsetLoadBalancer {
 private:
-    SubsetSelectorMap selectors_;
-    const std::vector<std::pair<std::set<std::string>, std::optional<Fallback>>> subset_keys_top_;
+    SubsetSelectorMapPtr selectors_;
+    const std::vector<std::pair<std::set<std::string>, std::experimental::optional<Fallback>>> subset_keys_top_;
 
 
 
-    void doPrint(const SubsetSelectorMap& map, const std::string *key);
+    void doPrint(const SubsetSelectorMapPtr map, const std::string *key);
 
 
 
@@ -39,7 +42,8 @@ public:
     void initSubsetSelectorMap();
     void printSubsetKeys();
     void printSelectors();
-    void printFallback(const std::optional<Fallback> &fallback);
-    std::optional<Fallback> tryFindSelectorFallbackPolicy(const std::vector<std::string>&match_criteria_vec) const;
+    void printFallback(const std::experimental::optional<Fallback> &fallback);
+    std::experimental::optional<Fallback> tryFindSelectorFallbackPolicy(const std::vector<std::string>&match_criteria_vec) const;
+    void printSelectorsCorrect(const SubsetSelectorMapPtr selectorMap);
 };
 
